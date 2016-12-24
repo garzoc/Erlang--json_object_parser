@@ -32,4 +32,4 @@ json parser for Erlang
 
 - encode doesn't work yet with nested objects but nested lists works just fine
 - strange behaviour with newline [ascii code:(10)] when using encode
-- floats not supported
+- floats not supported with decode
