@@ -1,4 +1,5 @@
 -module(json).
+
 -export([decode/1,encode/1,list_to_array/2]).
 -define(leftBrack,32).
 
@@ -42,7 +43,7 @@ json_value_format(V) ->
 	case (is_number(V) orelse is_list(V)) andalso (isAlphaNum(V)==false) of
 			true->format_to_string(V);
 			false->"\""++format_to_string(V)++"\""
-	end.
+	end.	
 	
 	
 				
@@ -57,7 +58,7 @@ encode(L)->list_to_atom("{"++toJson(L)).
 %io:format(json:decode([{v,10},{t,l}])).
 %json:encode([{v,10},{t,l}]).
 %json:encode([{v,10},{[10,[10,10]],[10,l,[l,10,[k,v]]]}]).
-%json:encode([{"v",10},{t,l}]).%unsolved
+%json:encode([{"v",10},{t,l}]).
 %json:encode([{"v",10},{t,[tl]}]).
 
 %Reverse the process
@@ -67,6 +68,7 @@ list_to_array(Arr,[44|Xs])->[Arr]++list_to_array([],Xs);
 list_to_array(Arr,[93|_])->[Arr];
 list_to_array(Arr,[91|Xs])->list_to_array(Arr,Xs);
 list_to_array(Arr,[X|Xs])->list_to_array(Arr++[X],Xs);
+%????????
 list_to_array(_,[])->[].
 
 %key is always string might be uneccasary function
@@ -91,6 +93,8 @@ json_find_value(Value,Type,[X|Xs])->json_find_value(Value++[X],Type,Xs).
 json_find_value_type([34|Xs])->json_find_value([],34,Xs);
 %loop
 json_find_value_type([32|Xs])->json_find_value_type(Xs);
+%find nested object
+json_find_value_type([123|Xs])->json_find_brack([123|Xs]);
 %value is list return ->{Value found , remaining list}
 json_find_value_type([91|Xs])->json_find_value([],93,Xs);
 %value is number return ->{Value found , remaining list}
@@ -105,15 +109,34 @@ json_find_colon([_|Xs])->json_find_colon(Xs).
 %json has more fileds
 json_find_end([44|Xs])->json_find_qote(Xs);
 %json ends
-json_find_end([125|_])->[];
+json_find_end([125|Xs])->{[],Xs};
 %loop tp next character
 json_find_end([X|Xs])->io:format("~p~n",[X]),json_find_end(Xs).
 
-json_find_qote([34|Xs])->{Key,String}=json_key_string([],Xs),{Value,String2}=json_find_colon(String),[{list_to_atom(Key),Value}]++json_find_end(String2);
+%this might also be an unessacary functions that can be moved down to json_find_bracket
+json_find_qote([34|Xs])->{Key,String}=json_key_string([],Xs),{Value,String2}=json_find_colon(String),{FieldEnd,Tail}=json_find_end(String2),{[{list_to_atom(Key),Value}]++FieldEnd,Tail};
 json_find_qote([_|Xs])->json_find_qote(Xs).
 
 json_find_brack([123|Xs])->json_find_qote(Xs);
 json_find_brack([X|Xs])->io:format("~p~n",[X]),json_find_brack(Xs);
 json_find_brack(X)->io:format("~p",[X]).
-decode(String)->json_find_brack(String).
+decode(String)->{H,_}=json_find_brack(String),H.
+
+%json:list_to_array([],"[10,10]").
+%json:decode("{\"hej\":\"hej\"}").
+%json:decode("{\"hej\":[10,10]}").
+%json:decode("{\"hej\":[10,48,10]}").
+%json:decode("{\"hej\":{\"hej\":[10,48,10]}}").
+%json:encode(json:decode("{\"hej\":[10,10]}")).
+%json:encode(json:decode("{\"hej\":[48,10]}")). strange?
+%json:encode(json:decode("{\"hej\":[48,32,10]}")). ???
+%json:encode(json:decode("{\"hej\":[48,10,32]}")). ???
+
+%json:decode("{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":{\"hej\":[10,48,10]}}}}}}}}}}}}}").
+
+%json:decode("{\"hej\":[],\"test\":[]}"). 
+%json:encode(json:decode("{\"hej\":[],\"test\":[]}")).
+
+%{ok,_}=file:consult("/Users/john/Desktop/test.conf"),json:read(json:start(),)
+
 
