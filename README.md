@@ -17,17 +17,19 @@ json parser for Erlang
 
 ####Decode: (Returns a list of key value pairs [{Key,Value}])
 
-- json:decode("{\"hej\":\"hej\"}"). -> [{hej,"hej"}]
+- json:decode("{\"test\":\"test\"}"). -> [{test,"test"}]
 
-- json:decode("{\"hej\":[10,10]}"). -> [{hej,"\n\n"}]
+- json:decode("{\"test\":[10,48,10]}"). -> [{test,"\n0\n"}]
 
-- json:decode("{\"hej\":[10,48,10]}"). -> [{hej,"\n0\n"}]
+- json:decode("{\"test\":{\"test\":[10,48,10]}}"). -> [{test,[{test,"\n0\n"}]}]
 
-- json:decode("{\"hej\":{\"hej\":[10,48,10]}}"). -> [{hej,[{hej,"\n0\n"}]}]
+- json:decode("{\"test\":{\"test\":[10,48,10]},        \"test\":10}"). -> [{test,[{test,"\n0\n"}]},{test,10}]
+- json:decode("{\"test\":{\"test\":[10,48,10]},\"test\":0.10}"). -> [{test,[{test,"\n0\n"}]},{test,"0.10"}]
 
-- json:encode(json:decode("{\"hej\":[10,10]}")). -> '{"hej":[10,10]}'
+- json:encode(json:decode("{\"test\":[10,10]}")). -> '{"test":[10,10]}'
 
 ##Note:
 
 - encode doesn't work yet with nested objects but nested lists works just fine
 - strange behaviour with newline [ascii code:(10)] when using encode
+- floats not supported
