@@ -3,7 +3,7 @@ json parser for Erlang
 
 ##Examples
 
-####-Encode: (Returns an atom)
+####- Encode: (Returns an atom)
 
 json:encode([{v,10},{t,l}]).
 
@@ -13,7 +13,7 @@ json:encode([{"v",10},{t,l}]).
 
 json:encode([{"v",10},{t,[tl]}]).
 
-####-Decode: (Returns a list of key value pairs [{Key,Value}])
+####- Decode: (Returns a list of key value pairs [{Key,Value}])
 
 json:decode("{\"hej\":\"hej\"}").
 
