@@ -16,7 +16,11 @@ json:encode([{"v",10},{t,[tl]}]).
 Decode:
 
 json:decode("{\"hej\":\"hej\"}").
+
 json:decode("{\"hej\":[10,10]}").
+
 json:decode("{\"hej\":[10,48,10]}").
+
 json:decode("{\"hej\":{\"hej\":[10,48,10]}}").
+
 json:encode(json:decode("{\"hej\":[10,10]}")).
