@@ -13,7 +13,7 @@ json:encode([{"v",10},{t,l}]).
 
 json:encode([{"v",10},{t,[tl]}]).
 
-Decode:
+Decode: (Returns a list of key value pairs [{Key,Value}])
 
 json:decode("{\"hej\":\"hej\"}").
 
