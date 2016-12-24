@@ -6,8 +6,11 @@ json parser for Erlang
 Encode: (Returns an atom)
 
 json:encode([{v,10},{t,l}]).
+
 json:encode([{v,10},{[10,[10,10]],[10,l,[l,10,[k,v]]]}]).
+
 json:encode([{"v",10},{t,l}]).
+
 json:encode([{"v",10},{t,[tl]}]).
 
 Decode:
