@@ -7,7 +7,7 @@ json parser for Erlang
 
 - json:encode([{v,10},{t,l}]).
 
-- json:encode([{v,10},{[10,[10,10]],[10,l,[l,10,[k,v]]]}]).
+- json:encode([{v,10},{[10,[10,10]],[10,l,[l,10,[k,v]]]}]). -> '{"v":10,"[10,[10,10]]":[10,"l",["l",10,["k","v"]]]}'
 
 - json:encode([{"v",10},{t,l}]).
 
