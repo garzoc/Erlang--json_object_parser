@@ -1,4 +1,4 @@
-# Erlang--json_object_parser
+# Erlang JSON parser
 json parser for Erlang
 
 ##Examples:
