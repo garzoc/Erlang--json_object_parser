@@ -155,6 +155,5 @@ decode(String)->{H,_}=json_find_brack(String),H.
 %json:decode("{\"hej\":[],\"test\":[]}"). 
 %json:encode(json:decode("{\"hej\":[],\"test\":[]}")).
 
-%{ok,_}=file:consult("/Users/john/Desktop/test.conf"),json:read(json:start(),)
 
 
