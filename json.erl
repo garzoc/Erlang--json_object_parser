@@ -32,7 +32,7 @@ format_to_string(V) ->
 		is_integer(V)->integer_to_list(V);
 		is_float(V)->float_to_list(V,[{decimals,10},compact]);
 		is_list(V)-> case isAlphaNum(V) of 
-				false->"["++list_to_string(V)++"]";
+				false->case V of [{_,_}|_]->"{"++toJson(V); _->"["++list_to_string(V)++"]" end;
 				true->V 
 			end;
 		true->V
@@ -74,11 +74,11 @@ encode(L)->list_to_atom("{"++toJson(L)).
 %list_to_array2(_,[],_)->[].
 
 print(Data)->io:format("~p~n",[Data]).
-%reverse a list that has been turned into a string back to a list
+%parse an array
 list_to_array(Arr,[44|Xs],1)->{Value,_}=json_find_value_type(Arr),{Next,Tail}=list_to_array([],Xs,1),{ [Value]++Next,Tail};
 list_to_array(Arr,[93|Xs],1)->{Value,_}=json_find_value_type(Arr),{[Value],Xs};
 list_to_array(Arr,[93|Xs],NestCount)->list_to_array(Arr++[93],Xs,NestCount-1);
-list_to_array(_,[91|Xs],0)->list_to_array2([],Xs,1);
+list_to_array(_,[91|Xs],0)->list_to_array([],Xs,1);
 list_to_array(Arr,[91|Xs],NestCount)->list_to_array(Arr++[91],Xs,NestCount+1);
 list_to_array(Arr,[X|Xs],NestCount)->list_to_array(Arr++[X],Xs,NestCount).
 %????????
@@ -112,7 +112,7 @@ json_find_value_type([32|Xs])->json_find_value_type(Xs);
 %find nested object
 json_find_value_type([123|Xs])->json_find_brack([123|Xs]);
 %value is list return ->{Value found , remaining list}
-json_find_value_type([91|Xs])->list_to_array2([91|Xs]);%json_find_value([],93,Xs),
+json_find_value_type([91|Xs])->list_to_array([91|Xs]);%json_find_value([],93,Xs),
 %value is number return ->{Value found , remaining list}
 json_find_value_type([X|Xs])->json_find_value([X],32,Xs);
 
